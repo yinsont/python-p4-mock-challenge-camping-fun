@@ -1,5 +1,7 @@
 import json
-from os import environ
+import os
+os.environ['DB_URI'] = "sqlite:///:memory:"
+
 from flask import request
 
 from app import app

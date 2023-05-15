@@ -35,6 +35,14 @@ class Camper(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f'<Camper {self.id}: {self.name}>'
+    
+class Signup(db.Model, SerializerMixin):
+    __tablename__ = 'signups'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    def __repr__(self):
+        return f'<Signup {self.id}>'
 
 
 # add any models you may need. 
