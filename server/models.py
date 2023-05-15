@@ -20,15 +20,21 @@ class Activity(db.Model, SerializerMixin):
     __tablename__ = 'activities'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    difficulty = db.Column(db.Integer)
 
-class Signup(db.Model, SerializerMixin):
-    __tablename__ = 'signups'
-
-    id = db.Column(db.Integer, primary_key=True)
+    def __repr__(self):
+        return f'<Activity {self.id}: {self.name}>'
 
 class Camper(db.Model, SerializerMixin):
     __tablename__ = 'campers'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    age = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f'<Camper {self.id}: {self.name}>'
+
 
 # add any models you may need. 
