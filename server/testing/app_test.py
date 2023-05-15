@@ -4,8 +4,8 @@ os.environ['DB_URI'] = "sqlite:///:memory:"
 
 from flask import request
 
-from app import app
-from models import db, Activity, Signup, Camper
+from app import app, db
+from models import Activity, Signup, Camper
 
 class TestApp:
     '''Flask application in app.py'''
@@ -14,6 +14,9 @@ class TestApp:
         '''retrieves campers with GET requests to /campers.'''
 
         with app.app_context():
+
+            db.create_all()
+            
             clark = Camper(name="Clark Kent", age=9)
             db.session.add(clark)
             db.session.commit()
