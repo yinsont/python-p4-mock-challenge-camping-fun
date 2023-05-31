@@ -71,7 +71,7 @@ class Signup(db.Model, SerializerMixin):
 
     @validates('time')
     def validate_time(self, key, value):
-        if value > 23: raise ValueError("Insert Proper Hour")
+        if value > 23 or value < 0: raise ValueError("Insert Proper Hour")
         return value
     # serialize_rules = 
     def __repr__(self):
