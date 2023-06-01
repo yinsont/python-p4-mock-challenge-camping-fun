@@ -58,6 +58,17 @@ class Activities(Resource):
 api.add_resource(Activities, '/activities')
 
 class ActivityByID(Resource):
+    def patch(self, id):
+        try:
+            activity = Activity.query.filter_by(id = id).first()
+            for attr in request.json:
+                setattr(activity, attr, request.json[attr])
+            db.session.add(activity)
+            db.session.commit()
+            return activity.to_dict(), 202
+        except:
+            raise Exception("error")
+        
     def delete(self, id):
         try:
             activity = Activity.query.filter_by(id = id).first()
