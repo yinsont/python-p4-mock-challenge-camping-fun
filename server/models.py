@@ -23,10 +23,10 @@ class Activity(db.Model, SerializerMixin):
     name = db.Column(db.String)
     difficulty = db.Column(db.Integer)
 
-    signups = db.relationship("Signup", backref = "Activity")
-
     created_at = db.Column(db.DateTime, server_default = db.func.now())
     updated_at = db.Column(db.DateTime, onupdate = db.func.now())
+
+    signups = db.relationship('Signup', backref = 'activity')
 
     def __repr__(self):
         return f'<Activity {self.id}: {self.name}>'
@@ -38,22 +38,23 @@ class Camper(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
     age = db.Column(db.Integer)
 
-    signups = db.relationship("Signup", backref = "Camper")
-
     created_at = db.Column(db.DateTime, server_default = db.func.now())
     updated_at = db.Column(db.DateTime, onupdate = db.func.now())
 
+    signups = db.relationship('Signup', backref = 'camper')
+
     @validates('name')
     def validate_name(self, key, value):
-        if not value: raise ValueError("Needs Name")
+        if not value:
+            raise ValueError('Need Name')
         return value
-
+    
     @validates('age')
-    def validate_age(self, key, value):
-        if value > 18 or value < 8:
-            raise ValueError("Too young or Too old")
+    def vaidate_age(self, key, value):
+        if value < 8 or value > 18:
+            raise ValueError('Age between 8 and 18')
         return value
-
+        
     def __repr__(self):
         return f'<Camper {self.id}: {self.name}>'
     
@@ -62,18 +63,21 @@ class Signup(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    camper_id = db.Column(db.Integer, db.ForeignKey("campers.id"))
-    activity_id = db.Column(db.Integer, db.ForeignKey("activities.id"))
+    camper_id = db.Column(db.Integer, db.ForeignKey('campers.id'))
+    activity_id = db.Column(db.Integer, db.ForeignKey('activities.id'))
 
     time = db.Column(db.Integer)
+
     created_at = db.Column(db.DateTime, server_default = db.func.now())
     updated_at = db.Column(db.DateTime, onupdate = db.func.now())
+    # serialize_rules = 
 
     @validates('time')
-    def validate_time(self, key, value):
-        if value > 23 or value < 0: raise ValueError("Insert Proper Hour")
+    def validates_time(self, key, value):
+        if not 0 < value < 23:
+            raise ValueError('Valid Hour of Day')
         return value
-    # serialize_rules = 
+    
     def __repr__(self):
         return f'<Signup {self.id}>'
 
