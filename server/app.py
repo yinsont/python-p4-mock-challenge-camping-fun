@@ -27,8 +27,10 @@ def home():
 
 class Campers(Resource):
     def get(self):
-        campers = [camper.to_dict() for camper in Camper.query.all()]
-        return make_response(campers, 200)
+        campers = [camper.to_dict(only = ('id', 'name', 'age')) for camper in Camper.query.all()]
+
+        return campers, 200
+    
     def post(self):
         try:
             new_camper = Camper(
@@ -37,46 +39,37 @@ class Campers(Resource):
             )
             db.session.add(new_camper)
             db.session.commit()
-            return make_response(new_camper.to_dict(), 201)
+            return new_camper.to_dict(only=('id', 'name', 'age')), 201
         except:
-            return {"error": "404: Validation error"}, 400
+            return {'error': '400: Validation error'}, 400
+        
 api.add_resource(Campers, '/campers')
 
-class CamperByID(Resource):
+
+class CampersByID(Resource):
     def get(self, id):
         try:
-            camper = Camper.query.filter_by(id = id).first()
-            return make_response(camper.to_dict(), 200)
+            camper = Camper.query.filter_by(id = id).first().to_dict(only = ('id', 'name', 'age', 'activities'))
+            return camper, 200
         except:
-            return {"error": "404: Camper not found"}, 404
-api.add_resource(CamperByID, '/campers/<int:id>')
+            return {'error': '404: Camper not found'}, 404
+api.add_resource(CampersByID, '/campers/<int:id>')
 
 class Activities(Resource):
     def get(self):
-        activities = [activity.to_dict() for activity in Activity.query.all()]
-        return make_response(activities, 200)
+        activities = [activity.to_dict(only = ('id', 'name', 'difficulty')) for activity in Activity.query.all()]
+        return activities, 200
 api.add_resource(Activities, '/activities')
 
 class ActivityByID(Resource):
-    def patch(self, id):
-        try:
-            activity = Activity.query.filter_by(id = id).first()
-            for attr in request.json:
-                setattr(activity, attr, request.json[attr])
-            db.session.add(activity)
-            db.session.commit()
-            return activity.to_dict(), 202
-        except:
-            raise Exception("error")
-        
     def delete(self, id):
         try:
             activity = Activity.query.filter_by(id = id).first()
             db.session.delete(activity)
             db.session.commit()
-            return {}, 204
+            return {},204
         except:
-            return {"error":"404: Activity not found"}, 404
+            return {'error': '404: Activity not found'}, 404
 api.add_resource(ActivityByID, '/activities/<int:id>')
 
 class Signups(Resource):
@@ -87,11 +80,14 @@ class Signups(Resource):
                 camper_id = request.json['camper_id'],
                 activity_id = request.json['activity_id']
             )
+
             db.session.add(new_signup)
             db.session.commit()
-            return make_response(new_signup.activity_id.to_dict(), 202)
+
+            return new_signup.to_dict(), 200
         except:
-            return {"error": "400: Validation error"}, 400
+            return {"error":"jhjhjh"},400
+    
 api.add_resource(Signups, '/signups')
 
 if __name__ == '__main__':

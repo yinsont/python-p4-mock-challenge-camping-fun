@@ -21,7 +21,7 @@ class TestModels:
         '''require campers to have ages between 8 and 18, inclusive.'''
 
         with pytest.raises(ValueError):
-            Camper(name='Ben', age=0)
+            Camper(name='Ben', age=7)
 
         with pytest.raises(ValueError):
             Camper(name='Prabhdip', age=19)

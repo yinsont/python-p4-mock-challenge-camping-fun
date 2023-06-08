@@ -160,10 +160,10 @@ class TestApp:
                 }
             ).json
 
-            assert response['id']
-            assert response['time'] == 12
-            assert response['camper_id'] == peter.id
-            assert response['activity_id'] == canoeing.id
+            assert response['id'], "your response object did not have a id field"
+            assert response['time'] == 12, "your response object did not have a time field"
+            assert response['camper_id'] == peter.id, "your response object did not have a camper_id field"
+            assert response['activity_id'] == canoeing.id, "your response object did not have a activity_id field"
 
             signup = Signup.query.filter(Signup.id == response['id']).one_or_none()
             assert signup
